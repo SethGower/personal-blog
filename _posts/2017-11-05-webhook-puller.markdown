@@ -2,7 +2,7 @@
 layout: post
 title:  Webhook-Puller
 date:   2017-11-05
-categories: GitHub tutorials
+categories: GitHub | tutorials
 ---
 
 Although this might be a simple thing for a lot of people, I have just recently discovered how to use GitHub's `webhook` functionality. In short, this feature allows you to setup *listeners* to keep track of when GitHub sends a signal based on certain triggers that you establish, such as pushes or pull requests. The app that I am using is made by a friend of mine and is located on his [GitHub](https://github.com/mfrancis95/webhook-puller). If you look at the repo, and notice that the `README` seems very similar, that's because they are, since I wrote his documentation, and decided to turn it into a blog post.  
