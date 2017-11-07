@@ -45,7 +45,7 @@ This section will cover setup using NGINX, these instructions are tailored towar
 
 1. Configure the DNS settings for your domain to add an `A` record to point `webhook.yourdomain.com` to your web-server.
 2. Create an NGINX configuration `webhook.yourdomain.com`, use this as an example.
-```
+```nginx
 server {
         listen 80;
         server_name webhook.sethgower.com;
@@ -54,6 +54,7 @@ server {
                 proxy_pass http://127.0.0.1:4242;
         }
         #any more config from certbot
+}
 ```
     a. If you would like to secure this with SSL, setup `certbot`, although this will not be covered here.
 3. Run the app on port `8001` (or change the port in the `webhook.sethgower.com` and `config.json` in the `webhook-puller` directory).

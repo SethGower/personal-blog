@@ -97,20 +97,19 @@ padding-bottom: 0.3em;
 pre{
 background-color: black !important;
 border:none !important;
-border-radius: 0px !important;
+border-radius: 10px !important;
 font-size: 20px !important;
-padding: 1.5em !important;
+padding: .5em !important;
 color:white !important;
 }
 .post-meta{
   color: skyblue !important;
 }
-
 code{
   background-color: black !important;
   color: white !important;
   border: none !important;
-  border-radius: 0px !important;
+  border-radius: 5px !important;
 }
 
 .page-tagline{
@@ -142,7 +141,6 @@ text-align: center;
   text-align: center;
   padding: 1em;
   letter-spacing: 2px;
-
 }
 
 .jumbotron{
@@ -174,15 +172,6 @@ $content-width:    800px;
 $on-palm:          600px;
 $on-laptop:        800px;
 
-
-
-// Use media queries like this:
-// @include media-query($on-palm) {
-//     .wrapper {
-//         padding-right: $spacing-unit / 2;
-//         padding-left: $spacing-unit / 2;
-//     }
-// }
 @mixin media-query($device) {
     @media screen and (max-width: $device) {
         @content;

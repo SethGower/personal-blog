@@ -36,14 +36,13 @@ This section assumes that you have already configured your DNS provider to point
 Once you have NGINX installed, navigate to `/etc/nginx/sites-available/` and create a file (I would suggest naming it the fully qualified domain name, ie `blog.sethgower.com` for this website).
 
 Inside of that file (in order to edit the file, you will need `sudo` or root access) put the following code.
-```numbered
+```nginx
 server {
     listen 80;
 
     server_name yourdomain.com www.yourdomain.com;
     root /path/to/your/html;
     index index.html index.htm;
-
     location / {
         try_files $uri $uri/ =404
     }
@@ -51,7 +50,7 @@ server {
 ```
 Now let's walk through that line by line (starting side of the `server` tag)
 
-1. `listen 80;` tells NGINX to listen on port 80, which is the default TCP port for HTTP traffic.
+1. On Line 2, `listen 80;` tells NGINX to listen on port 80, which is the default TCP port for HTTP traffic.
 2. `server_name` tells NGINX to look for traffic looking for `yourdomain.com` and `www.yourdomain.com` and tells it to follow the instructions in this file for traffic matching that.
 3. `root` is the location where your website is stored, ie where your `index.html`, `main.css`, etc are located, the convention in Debian systems is `/var/www/folder-for-website`.
 4. `index` just tells NGINX what the main page is called in that root folder
@@ -61,7 +60,7 @@ Now let's walk through that line by line (starting side of the `server` tag)
 You can Do other things in the `location /` block, such as, as I mention in my tutorial on [GitHub webhooks]({{ site.baseurl }}{% post_url 2017-11-05-webhook-puller %}), you can send traffic to another IP or port on your local host, if you have an app running by using the `proxy_pass` flag followed by the IP along with the protocol, for example `http://localhost:12345`.
 
 The final step before your server will work is to make a symlink between this file and itself in `/etc/nginx/sites-enabled/`. You can do this by running
-```
+```bash
 sudo ln -s /etc/nginx/sites-available/yourdomain.com /etc/nginx/sites-enabled/yourdomain.com
 ```
 
@@ -75,7 +74,7 @@ Now, after you populate your `/var/www/yourdomain.com/` with HTML, then you shou
 <html>
 ```
 And then reload NGINX by executing
-```
+```bash
 sudo systemctl reload nginx.service
 ```
 
@@ -83,13 +82,13 @@ sudo systemctl reload nginx.service
 
 Now that you can reach your website, from the internet, it is time to secure your website with HTTPS. We do this by using Certbot. Certbot will do the majority of the work for you, so all you have to do is run the following commands.
 
-```shell
+```bash
 sudo certbot --nginx -d yourdomain.com
 ```
 
 After you run this, you will get this output, if your DNS record is properly setup and your NGINX is properly setup.
 
-```
+```bash
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Obtaining a new certificate
 Performing the following challenges:
@@ -114,7 +113,7 @@ If you select `2`, then ***all*** traffic coming to your server will be encrypte
 
 After you finish the previous step, you should see this
 
-```
+```bash
 Redirecting all traffic on port 80 to ssl in /etc/nginx/sites-enabled/yourdomain.com
 
 -------------------------------------------------------------------------------
@@ -128,7 +127,7 @@ https://www.ssllabs.com/ssltest/analyze.html?d=yourdomain.com
 Now if you look into your `/etc/nginx/sites-available/yourdomain.com` you should now see this.
 
 
-```
+```nginx
 server {
         listen 80;
 
@@ -162,15 +161,15 @@ ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256 ECDHE-ECDSA-AES256-GCM-SHA384 ECDHE-E
 
 Now, if you were to test your website [here](https://www.ssllabs.com/ssltest/) you won't get a full A+. There are still some tweaks you need to do. First, you need to run
 
-```
+```bash
 sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 ```
 and then add the following code to your `/etc/nginx/sites-available/yourdomain.com`
 
 
-```
+```nginx
 ssl_dhparam /etc/ssl/certs/dhparam.pem;
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 ```
 
-This adds a [DH Parameter](https://security.stackexchange.com/questions/94390/whats-the-purpose-of-dh-parameters) to you SSL and enables HSTS (HTTPS Strict Transport Security). Which guarantees that the client will connect via HTTPS. 
+This adds a [DH Parameter](https://security.stackexchange.com/questions/94390/whats-the-purpose-of-dh-parameters) to you SSL and enables HSTS (HTTPS Strict Transport Security). Which guarantees that the client will connect via HTTPS.
